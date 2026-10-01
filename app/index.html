@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A concise dashboard for project health and activity.">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="dashboard-header">
+        <p class="eyebrow">Portfolio overview</p>
+        <h1>Project Pulse</h1>
+        <p class="dashboard-description">
+          A focused view of active work, ownership, and the latest updates.
+        </p>
+        <p id="project-count" class="project-count" aria-live="polite">Loading projects…</p>
+      </header>
+
+      <section class="projects-section" aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <h2 id="projects-heading">All projects</h2>
+        </div>
+        <div id="dashboard-state" class="dashboard-state" role="status" aria-live="polite">
+          Loading project data…
+        </div>
+        <div id="project-grid" class="project-grid" aria-live="polite" aria-busy="true"></div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        const projectGrid = document.getElementById("project-grid");
+        const dashboardState = document.getElementById("dashboard-state");
+        const projectCount = document.getElementById("project-count");
+        const requiredFields = ["name", "owner", "status", "recentActivity", "priority"];
+
+        function normalizeClass(value) {
+          return value
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "") || "unknown";
+        }
+
+        function validateData(data) {
+          if (!data || typeof data !== "object" || Array.isArray(data) || !Array.isArray(data.projects)) {
+            throw new Error("The data must be an object with a projects array.");
+          }
+
+          data.projects.forEach(function (project, index) {
+            if (!project || typeof project !== "object" || Array.isArray(project)) {
+              throw new Error("Project " + (index + 1) + " must be an object.");
+            }
+
+            requiredFields.forEach(function (field) {
+              if (typeof project[field] !== "string" || project[field].trim() === "") {
+                throw new Error("Project " + (index + 1) + " has an invalid " + field + " value.");
+              }
+            });
+          });
+
+          return data.projects;
+        }
+
+        function makeDetail(label, value) {
+          const detail = document.createElement("div");
+          const term = document.createElement("dt");
+          const description = document.createElement("dd");
+          term.textContent = label;
+          if (value instanceof Node) {
+            description.append(value);
+          } else {
+            description.textContent = value;
+          }
+          detail.append(term, description);
+          return detail;
+        }
+
+        function renderProjects(projects) {
+          projectGrid.replaceChildren();
+          projectGrid.setAttribute("aria-busy", "false");
+
+          if (projects.length === 0) {
+            dashboardState.textContent = "No projects are available yet.";
+            dashboardState.className = "dashboard-state dashboard-state--empty";
+            projectCount.textContent = "0 projects";
+            return;
+          }
+
+          const fragment = document.createDocumentFragment();
+          projects.forEach(function (project) {
+            const card = document.createElement("article");
+            card.className = "project-card";
+            card.setAttribute("aria-labelledby", "project-" + normalizeClass(project.name));
+
+            const cardHeader = document.createElement("header");
+            cardHeader.className = "card-header";
+            const title = document.createElement("h3");
+            title.id = "project-" + normalizeClass(project.name);
+            title.textContent = project.name;
+            const priority = document.createElement("p");
+            priority.className = "priority priority--" + normalizeClass(project.priority);
+            priority.textContent = "Priority: " + project.priority;
+            cardHeader.append(title, priority);
+
+            const details = document.createElement("dl");
+            details.className = "project-details";
+            const status = document.createElement("span");
+            status.className = "status status--" + normalizeClass(project.status);
+            status.textContent = "Status: " + project.status;
+            details.append(makeDetail("Status", status), makeDetail("Owner", project.owner));
+
+            const activity = document.createElement("section");
+            activity.className = "activity";
+            activity.setAttribute("aria-label", "Recent activity");
+            const activityHeading = document.createElement("h4");
+            activityHeading.textContent = "Recent activity";
+            const activityText = document.createElement("p");
+            activityText.textContent = project.recentActivity;
+            activity.append(activityHeading, activityText);
+
+            card.append(cardHeader, details, activity);
+            fragment.append(card);
+          });
+
+          dashboardState.textContent = "";
+          dashboardState.className = "dashboard-state";
+          projectCount.textContent = projects.length + (projects.length === 1 ? " project" : " projects");
+          projectGrid.append(fragment);
+        }
+
+        function showError(message, modifier) {
+          projectGrid.replaceChildren();
+          projectGrid.setAttribute("aria-busy", "false");
+          dashboardState.textContent = message;
+          dashboardState.className = "dashboard-state dashboard-state--error " + modifier;
+          projectCount.textContent = "Projects unavailable";
+        }
+
+        fetch("project-data.json")
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error("Request failed with status " + response.status + ".");
+            }
+            return response.text();
+          })
+          .then(function (text) {
+            try {
+              const data = JSON.parse(text);
+              renderProjects(validateData(data));
+            } catch (error) {
+              showError("Project data is malformed and cannot be displayed.", "dashboard-state--malformed");
+            }
+          })
+          .catch(function () {
+            showError("Project data could not be loaded. Please try again later.", "dashboard-state--fetch-error");
+          });
+      }());
+    </script>
+  </body>
+</html>

@@ -1,0 +1,269 @@
+:root {
+  color-scheme: light;
+  --page: #f4f7fb;
+  --surface: #ffffff;
+  --surface-soft: #f8faff;
+  --ink: #172033;
+  --muted: #536078;
+  --line: #dce3ee;
+  --blue: #175fc0;
+  --blue-dark: #0c478f;
+  --shadow: 0 8px 24px rgba(26, 48, 82, 0.08);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.dashboard {
+  width: min(100% - 32px, 1200px);
+  margin: 0 auto;
+  padding: 56px 0 64px;
+}
+
+.dashboard-header {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--blue-dark);
+  font-size: 0.8125rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 12px;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.dashboard-description {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 1.0625rem;
+}
+
+.project-count {
+  display: inline-block;
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #e8f1ff;
+  color: #164f9d;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.project-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+h3 {
+  margin-bottom: 0;
+  font-size: 1.125rem;
+  line-height: 1.3;
+}
+
+.priority,
+.status {
+  display: inline-flex;
+  width: fit-content;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.priority--critical,
+.priority--high {
+  background: #fff0ef;
+  color: #9f2d26;
+}
+
+.priority--medium {
+  background: #fff8e4;
+  color: #775500;
+}
+
+.priority--low {
+  background: #eef4f0;
+  color: #27613a;
+}
+
+.project-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 0 0 24px;
+}
+
+.project-details div {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+dd {
+  min-width: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.status--on-track,
+.status--in-review {
+  background: #e9f4ed;
+  color: #20643b;
+}
+
+.status--at-risk {
+  background: #fff1e8;
+  color: #9b3d10;
+}
+
+.status--planned {
+  background: #e9f1ff;
+  color: #1c579d;
+}
+
+.activity {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.activity h4 {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.activity p {
+  margin-bottom: 0;
+  font-size: 0.9375rem;
+}
+
+.dashboard-state {
+  display: none;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  padding: 16px;
+  background: var(--surface-soft);
+  color: var(--muted);
+}
+
+.dashboard-state:not(:empty) {
+  display: block;
+}
+
+.dashboard-state--error {
+  border: 1px solid #e7b7b2;
+  background: #fff5f4;
+  color: #7d241e;
+}
+
+.dashboard-state--empty {
+  border: 1px solid var(--line);
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard {
+    width: min(100% - 24px, 1200px);
+    padding: 36px 0 48px;
+  }
+
+  .dashboard-header {
+    margin-bottom: 32px;
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .project-card {
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .card-header {
+    margin-bottom: 20px;
+  }
+}

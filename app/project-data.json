@@ -1,0 +1,39 @@
+{
+  "projects": [
+    {
+      "name": "Mobile onboarding refresh",
+      "owner": "Avery Chen",
+      "status": "On track",
+      "recentActivity": "Prototype feedback was incorporated this morning.",
+      "priority": "High"
+    },
+    {
+      "name": "Customer insights hub",
+      "owner": "Diego Morales",
+      "status": "At risk",
+      "recentActivity": "Data migration review is scheduled for Thursday.",
+      "priority": "Critical"
+    },
+    {
+      "name": "Billing reliability",
+      "owner": "Priya Shah",
+      "status": "In review",
+      "recentActivity": "Release candidate is awaiting quality approval.",
+      "priority": "Medium"
+    },
+    {
+      "name": "Knowledge base search",
+      "owner": "Nora Williams",
+      "status": "Planned",
+      "recentActivity": "Discovery interviews have been summarized.",
+      "priority": "Low"
+    },
+    {
+      "name": "Partner reporting",
+      "owner": "Marcus Lee",
+      "status": "On track",
+      "recentActivity": "The first dashboard metrics are now available.",
+      "priority": "Medium"
+    }
+  ]
+}
